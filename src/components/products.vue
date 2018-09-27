@@ -13,7 +13,7 @@
             <div slot="footer" v-if="product.inventory <= 0"><b-badge pill variant="danger">Out of stock</b-badge></div>
             <b-button @click="addToCart(product.id, product.title, product.price, product.inventory)"
               variant="outline-primary"
-              :disabled="product.inventory <= 0">
+              :disabled="noStock(product.id, product.inventory)">
               Add to Cart
             </b-button>
           </b-card>
@@ -34,9 +34,14 @@ import { mapState } from 'vuex'
 
 export default {
   name: 'products',
-  computed: mapState({
-    products: state => state.products.all
-  }),
+  computed: {
+    ...mapState({
+      products: state => state.products.all
+    }),
+    ...mapState({
+      cartItems: state => state.cart.cartItems
+    })
+  },
   methods: {
     addToCart (id, title, price, inventory) {
       const product = {
@@ -49,6 +54,21 @@ export default {
     },
     gotoCart () {
       this.$router.push('cart')
+    },
+    // TODO create a better method for this!!! How to handle stock vs cart quantity??
+    noStock (id, inventory) {
+      const item = this.cartItems.find(item => item.id === id)
+      if (!item) {
+      } else {
+        if (!item.quantity || item.quantity === 'undefined') {
+        } else {
+          if (item.quantity >= inventory) {
+            return true
+          } else {
+            return false
+          }
+        }
+      }
     }
   }
 }

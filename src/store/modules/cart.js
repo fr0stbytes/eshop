@@ -8,14 +8,23 @@ const getters = {
 }
 const actions = {
   addToCart ({ commit, state }, product) {
-    const cartItem = state.cartItems.find(item => item.id === product.id)
-    if (!cartItem) {
-      commit('saveItems', { id: product.id, title: product.title, price: product.price })
+    // commit('decreaseStock', { id: product.id }, { root: true })
+    if (product.inventory > 0) {
+      const cartItem = state.cartItems.find(item => item.id === product.id)
+      if (!cartItem) {
+        commit('saveItems', { id: product.id, title: product.title, price: product.price })
+        commit('increaseTotalCartItems')
+      } else {
+        if (cartItem.quantity < product.inventory) {
+          commit('incrementQuantity', { id: product.id, price: product.price })
+          commit('increaseTotalCartItems')
+        } else {
+          console.log('no stock')
+        }
+      }
     } else {
-      commit('incrementQuantity', { id: product.id, price: product.price })
+      commit('noStockMessage')
     }
-    commit('decreaseStock', { id: product.id }, { root: true })
-    commit('increaseTotalCartItems')
   }
 }
 const mutations = {
@@ -37,6 +46,12 @@ const mutations = {
   },
   increaseTotalCartItems (state) {
     state.totalCartItems++
+  },
+  decreaseQuantity (state, { id, price }) {
+    const cartItem = state.cartItems.find(item => item.id === id)
+    cartItem.quantity--
+    cartItem.total = cartItem.total - price
+    state.cartTotalPrice = state.cartTotalPrice - price
   }
 }
 
