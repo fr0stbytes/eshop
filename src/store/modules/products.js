@@ -1,30 +1,7 @@
+import db from '../../firebase/firebaseInit'
+
 const state = {
-  all: [
-    {
-      'id': '70-0969004',
-      'title': 'Doubting Thomas',
-      'price': 5.5,
-      'inventory': 4
-    },
-    {
-      'id': '75-0578415',
-      'title': 'Born Reckless',
-      'price': 6.7,
-      'inventory': 2
-    },
-    {
-      'id': '56-6762974',
-      'title': 'Go Fish',
-      'price': 6.1,
-      'inventory': 7
-    },
-    {
-      'id': '99-4505703',
-      'title': 'Still Bill',
-      'price': 9.3,
-      'inventory': 9
-    }
-  ],
+  all: [],
   cartMessage: ''
 }
 
@@ -34,6 +11,12 @@ const getters = {
 
 // actions
 const actions = {
+  getAllProducts ({ commit }) {
+    db.collection('products').get().then(
+      querySnapshot => {
+        commit('setProducts', querySnapshot)
+      })
+  },
   increaseCartQty ({ commit, state }, id) {
     commit('decreaseStock', { id })
     const item = state.all.find(item => item.id === id)
@@ -49,6 +32,17 @@ const actions = {
 
 // mutations
 const mutations = {
+  setProducts (state, querySnapshot) {
+    querySnapshot.forEach(doc => {
+      const data = {
+        'id': doc.id,
+        'name': doc.data().name,
+        'inventory': doc.data().inventory,
+        'price': doc.data().price
+      }
+      state.all.push(data)
+    })
+  },
   increaseStock (state, { id }) {
     const product = state.all.find(product => product.id === id)
     product.inventory++

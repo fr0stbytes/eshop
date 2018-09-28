@@ -4,14 +4,14 @@
     <div class="product-list container">
       <b-row class="mt-5">
         <b-col lg="3" v-for="product in products" :key="product.id" class="mb-1">
-          <b-card :title="product.title"
+          <b-card :title="product.name"
               :sub-title="product.price + ' &euro;'">
             <p class="card-text">
               Some quick example text to build on the card title and make up the bulk of the card's content.
             </p>
             <div slot="footer" v-if="product.inventory > 0">Stock: {{product.inventory}}</div>
             <div slot="footer" v-if="product.inventory <= 0"><b-badge pill variant="danger">Out of stock</b-badge></div>
-            <b-button @click="addToCart(product.id, product.title, product.price, product.inventory)"
+            <b-button @click="addToCart(product.id, product.name, product.price, product.inventory)"
               variant="outline-primary"
               :disabled="noStock(product.id, product.inventory)">
               Add to Cart
@@ -43,10 +43,10 @@ export default {
     })
   },
   methods: {
-    addToCart (id, title, price, inventory) {
+    addToCart (id, name, price, inventory) {
       const product = {
         id: id,
-        title: title,
+        name: name,
         price: price,
         inventory: inventory
       }
@@ -70,6 +70,9 @@ export default {
         }
       }
     }
+  },
+  created () {
+    this.$store.dispatch('getAllProducts')
   }
 }
 

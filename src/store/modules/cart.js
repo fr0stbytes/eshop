@@ -12,7 +12,7 @@ const actions = {
     if (product.inventory > 0) {
       const cartItem = state.cartItems.find(item => item.id === product.id)
       if (!cartItem) {
-        commit('saveItems', { id: product.id, title: product.title, price: product.price })
+        commit('saveItems', { id: product.id, name: product.name, price: product.price })
         commit('increaseTotalCartItems')
       } else {
         if (cartItem.quantity < product.inventory) {
@@ -31,7 +31,7 @@ const mutations = {
   saveItems (state, { id, title, price }) {
     state.cartItems.push({
       id,
-      title,
+      name,
       price,
       quantity: 1,
       total: price
