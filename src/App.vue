@@ -15,9 +15,15 @@ import Navbar from './components/navbar'
 export default {
   components: {
     Navbar
+  },
+  mounted () {
+    this.$store.dispatch('getAllProducts')
   }
 }
 </script>
 
 <style lang="scss">
+  .btn {
+    border-radius: 0 !important;
+  }
 </style>
