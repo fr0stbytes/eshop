@@ -1,9 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+// import store from './store'
 // import Home from './views/Home.vue'
 import Products from './views/products.vue'
 
 Vue.use(Router)
+// TODO Authenticated Routes including LOGIN
 
 export default new Router({
   mode: 'history',
@@ -26,6 +28,11 @@ export default new Router({
       path: '/login',
       name: 'login',
       component: () => import('./views/login.vue')
+    },
+    {
+      path: '/profile/:id',
+      name: 'profile',
+      component: () => import('./views/profile.vue')
     }
   ]
 })

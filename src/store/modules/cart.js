@@ -28,7 +28,7 @@ const actions = {
   }
 }
 const mutations = {
-  saveItems (state, { id, title, price }) {
+  saveItems (state, { id, name, price }) {
     state.cartItems.push({
       id,
       name,

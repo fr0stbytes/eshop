@@ -12,11 +12,11 @@
     <div class="cart-table">
       <b-table :fields="fields" :items="cartTotalItems" responsive>
         <template slot="product" slot-scope="data">
-          <span class="mt-1 cart-title">{{data.item.title}}</span><br>
+          <span class="mt-1 cart-title">{{data.item.name}}</span><br>
           <span class="is-small">{{data.item.id}}</span>
         </template>
         <template slot="price" slot-scope="data">
-          {{data.item.price}} &euro;
+          &euro; {{data.item.price}}
         </template>
         <template slot="quantity" slot-scope="data">
           <b-button size="sm" variant="outline-secondary"
@@ -24,20 +24,20 @@
           </b-button>
           <span class="pl-4 pr-4">{{data.item.quantity}}</span>
           <b-button size="sm" variant="outline-secondary"
-            @click="removeFromCart(data.item.id, data.item.title, data.item.price, data.item.inventory)"> -
+            @click="removeFromCart(data.item.id, data.item.name, data.item.price, data.item.inventory)"> -
           </b-button>
         </template>
+        <template slot="total" slot-scope="data">
+          {{data.item.total | currency}}
+        </template>
       </b-table>
-      <template slot="total" slot-scope="data">
-        {{data.item.total}}
-      </template>
     </div>
     <div class="mt-2 text-right">
       <svg height="8" width="200">
         <line x1="0" y1="0" x2="200" y2="0" style="stroke:rgb(0, 0, 0, .7);stroke-width:6" />
       </svg>
       <div class="mt-3">
-        <span class="total-label is-small">TOTAL:</span><span class="total-price">&euro; {{cartTotalPrice}}</span>
+        <span class="total-label is-small">TOTAL :</span><span class="total-price">{{cartTotalPrice | currency}}</span>
       </div>
     </div>
   </div>
@@ -75,10 +75,10 @@ export default {
       this.$store.dispatch('increaseCartQty', id)
       console.log(id)
     },
-    removeFromCart (id, title, price, inventory) {
+    removeFromCart (id, name, price, inventory) {
       const product = {
         id: id,
-        title: title,
+        name: name,
         price: price,
         inventory: inventory
       }
