@@ -16,8 +16,17 @@ export default {
   components: {
     Navbar
   },
+  // created () {
+  //     const authUser = Object.keys(window.Storage).filter((item) => item.startsWith('firebase:authUser'))
+  //     if (authUser) {
+  //       console.log(authUser.length)
+  //     } else {
+  //       console.log('no storage')
+  //     }
+  // },
   mounted () {
     this.$store.dispatch('getAllProducts')
+    this.$store.dispatch('isAuthenticated')
   }
 }
 </script>

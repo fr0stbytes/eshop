@@ -5,7 +5,8 @@ import router from '@/router'
 const state = {
   user: null,
   loginError: null,
-  registerError: null
+  registerError: null,
+  isAuthenticated: false
 }
 
 const getters = {
@@ -13,24 +14,42 @@ const getters = {
 }
 
 const actions = {
+  isAuthenticated ({ commit }) {
+    firebase.auth().onAuthStateChanged(function (user) {
+      if (user) {
+        const authUser = {
+          email: user.email,
+          id: user.uid
+        }
+        commit('setUser', authUser)
+        commit('isAuthenticated')
+      } else {
+      }
+    })
+  },
   registerWithEmail ({ commit }, registerDetails) {
-    console.log('reg in store')
-    firebase.auth().createUserWithEmailAndPassword(registerDetails.email, registerDetails.password)
-      .then((data) => {
-        db.collection('users').add({
-          email: data.user.email
-        })
-          .then((docRef) => {
-            const newUser = {
-              id: docRef.id,
-              email: registerDetails.email
-            }
-            commit('setUserRegister', newUser)
+    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+      .then(() => {
+        firebase.auth().createUserWithEmailAndPassword(registerDetails.email, registerDetails.password)
+          .then((data) => {
+            db.collection('users').add({
+              email: data.user.email
+            })
+              .then((docRef) => {
+                const newUser = {
+                  id: docRef.id,
+                  email: registerDetails.email
+                }
+                commit('setUserRegister', newUser)
+              })
+          })
+          .catch((error) => {
+            // TODO Handle Errors here.
+            commit('registerError', error)
           })
       })
       .catch((error) => {
-        // TODO Handle Errors here.
-        commit('registerError', error)
+        console.log(error)
       })
   },
   loginWithEmail ({ commit }, loginDetails) {
@@ -60,43 +79,42 @@ const actions = {
   clearRegisterError ({ commit }) {
     commit('clearRegisterError')
   },
-  loginWithGoogle ({ commit }) {
-    const provider = new firebase.auth.GoogleAuthProvider()
+  socialLogin ({ commit }, provider) {
     firebase.auth().signInWithPopup(provider)
-      // TODO FIX THIS SHIT!!!!!
       .then((result) => {
         const providedEmail = result.user.email
+        const providedName = result.user.displayName
+        const providedPhoto = result.user.photoURL
+        const providedUid = result.user.uid
         db.collection('users').where('email', '==', providedEmail).get()
-          .then((doc) => {
-              if (doc.exists) {
-                console.log('doc exists')
-                const newUser = {
-                  id: doc.id,
-                  email: doc.data().email
-                }
-                commit('setUserRegister', newUser)
-              } else {
-                console.log('doc not there')
-                db.collection('users').add({
-                  email: providedEmail
-                })
-                  .then((docRef) => {
-                    const newUser = {
-                      id: docRef.id,
-                      email: result.user.email
-                    }
-                    commit('setUserRegister', newUser)
-                  })
-              }
-            })
+          .then((querySnapshot) => {
+            if (querySnapshot.docs.length > 0) {
+              console.log('doc exists')
+            } else {
+              console.log('doc not there')
+              db.collection('users').add({
+                email: providedEmail,
+                name: providedName,
+                photoUrl: providedPhoto,
+                uid: providedUid
+              })
+            }
+          })
       })
       .catch((error) => {
         console.log(error)
+        commit('loginError', error)
       })
   }
 }
 
 const mutations = {
+  setUser (state, authUser) {
+    state.user = authUser
+  },
+  isAuthenticated (state) {
+    state.isAuthenticated = true
+  },
   setUserLogin (state, newUser) {
     state.user = newUser
     router.go(-1)

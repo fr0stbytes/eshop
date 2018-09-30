@@ -38,7 +38,7 @@
     </div>
     <div class="social-login mt-5">
       <b-button variant="danger" class="mt-2 mr-2 btn-block" @click="loginWithGoogle()">Login With Google</b-button>
-      <b-button variant="primary" class="mt-2 btn-block">Login With Facebook</b-button>
+      <b-button variant="primary" class="mt-2 btn-block" @click="loginWithFacebook()">Login With Facebook</b-button>
     </div>
 
     <b-modal id="modal1" centered hide-footer title="Create an Account">
@@ -91,6 +91,8 @@
 
 <script>
 import { mapState } from 'vuex'
+import firebase from 'firebase'
+
 export default {
   name: 'login',
   data () {
@@ -137,7 +139,12 @@ export default {
       }
     },
     loginWithGoogle () {
-      this.$store.dispatch('loginWithGoogle')
+      const provider = new firebase.auth.GoogleAuthProvider()
+      this.$store.dispatch('socialLogin', provider)
+    },
+    loginWithFacebook () {
+      const provider = new firebase.auth.FacebookAuthProvider()
+      this.$store.dispatch('socialLogin', provider)
     }
   }
 }
