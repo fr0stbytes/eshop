@@ -1,8 +1,7 @@
 import db from '../../firebase/firebaseInit'
 
 const state = {
-  all: [],
-  cartMessage: null
+  all: []
 }
 
 // getters
@@ -16,20 +15,17 @@ const actions = {
       querySnapshot => {
         commit('setProducts', querySnapshot)
       })
-  },
-  increaseCartQty ({ commit, state }, id) {
-    commit('decreaseStock', { id })
-    const item = state.all.find(item => item.id === id)
-    if (item.inventory > 0) {
-      commit('incrementQuantity', { id: item.id, price: item.price }, { root: true })
-      commit('increaseTotalCartItems', { root: true })
-    } else {
-      commit('noStockMessage', { productName: item.name })
-    }
-  },
-  resetStockMessage ({ commit }) {
-    commit('resetStockMessage')
   }
+  // increaseCartQty ({ commit, state }, id) {
+  //   commit('decreaseStock', { id })
+  //   const item = state.all.find(item => item.id === id)
+  //   if (item.inventory > 0) {
+  //     commit('incrementQuantity', { id: item.id, price: item.price }, { root: true })
+  //     commit('increaseTotalCartItems', { root: true })
+  //   } else {
+  //     commit('noStockMessage', { productName: item.name })
+  //   }
+  // }
 }
 
 // mutations
@@ -52,15 +48,6 @@ const mutations = {
   decreaseStock (state, { id }) {
     const product = state.all.find(product => product.id === id)
     product.inventory--
-  },
-  noStockMessage (state, { productName }) {
-    state.cartMessage = {
-      message: 'There are no more products left in stock',
-      name: productName
-    }
-  },
-  resetStockMessage (state) {
-    state.cartMessage = null
   }
 }
 
