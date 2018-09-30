@@ -16,12 +16,20 @@
           <b-dropdown-item href="#">Orders</b-dropdown-item>
           <b-dropdown-item @click="logout()">Logout</b-dropdown-item>
         </b-nav-item-dropdown>
-        <b-nav-item :to="'/cart'">
-          <i class="fas fa-shopping-cart"></i>
-          <b-badge pill variant="primary" v-if="this.totalCartItems > 0">
-            {{totalCartItems}}
-          </b-badge>
-        </b-nav-item>
+        <b-nav-item-dropdown right no-caret>
+          <template slot="button-content">
+            <i class="fas fa-shopping-cart"></i>
+            <b-badge pill variant="primary" v-if="this.totalCartItems > 0">
+              {{totalCartItems}}
+            </b-badge>
+          </template>
+          <b-dropdown-item v-for="cartItem in cartItems" :key="cartItem.id" class="p-3 border-bottom">
+            {{cartItem.quantity}}x <b class="ml-2">{{cartItem.name}}</b>
+          </b-dropdown-item>
+          <b-dropdown-item class="text-right mt-2">
+            <b-button variant="primary" @click="gotoCart()">Go to cart</b-button>
+          </b-dropdown-item>
+        </b-nav-item-dropdown>
       </b-navbar-nav>
     </b-collapse>
     </b-navbar>
@@ -34,12 +42,16 @@ import { mapState } from 'vuex'
 export default {
   computed: mapState({
     totalCartItems: state => state.cart.totalCartItems,
-    user: state => state.auth.user
+    user: state => state.auth.user,
+    cartItems: state => state.cart.cartItems
   }),
   methods: {
     logout () {
       confirm('Are you sure you want to logout?')
       this.$store.dispatch('logout')
+    },
+    gotoCart () {
+      this.$router.push('cart')
     }
   }
 }

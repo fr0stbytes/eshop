@@ -9,8 +9,8 @@
             <p class="card-text">
               Some quick example text to build on the card title and make up the bulk of the card's content.
             </p>
-            <div slot="footer" v-if="product.inventory > 0">Stock: {{product.inventory}}</div>
-            <div slot="footer" v-if="product.inventory <= 0"><b-badge pill variant="danger">Out of stock</b-badge></div>
+            <div slot="footer" v-if="!noStock(product.id, product.inventory)">Available: {{product.inventory}}</div>
+            <div slot="footer" v-if="noStock(product.id, product.inventory)"><b-badge pill variant="danger">Out of stock</b-badge></div>
             <b-button @click="addToCart(product.id, product.name, product.price, product.inventory)"
               variant="outline-primary"
               :disabled="noStock(product.id, product.inventory)">

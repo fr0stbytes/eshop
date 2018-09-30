@@ -2,7 +2,7 @@ import db from '../../firebase/firebaseInit'
 
 const state = {
   all: [],
-  cartMessage: ''
+  cartMessage: null
 }
 
 // getters
@@ -20,13 +20,15 @@ const actions = {
   increaseCartQty ({ commit, state }, id) {
     commit('decreaseStock', { id })
     const item = state.all.find(item => item.id === id)
-    console.log(item)
-    if (item.inventory >= 0) {
+    if (item.inventory > 0) {
       commit('incrementQuantity', { id: item.id, price: item.price }, { root: true })
       commit('increaseTotalCartItems', { root: true })
     } else {
-      commit('noStockMessage')
+      commit('noStockMessage', { productName: item.name })
     }
+  },
+  resetStockMessage ({ commit }) {
+    commit('resetStockMessage')
   }
 }
 
@@ -51,9 +53,14 @@ const mutations = {
     const product = state.all.find(product => product.id === id)
     product.inventory--
   },
-  noStockMessage (state) {
-    state.cartMessage = 'The product is running out of stock'
-    console.log('out of stock')
+  noStockMessage (state, { productName }) {
+    state.cartMessage = {
+      message: 'There are no more products left in stock',
+      name: productName
+    }
+  },
+  resetStockMessage (state) {
+    state.cartMessage = null
   }
 }
 

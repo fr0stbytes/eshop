@@ -1,7 +1,9 @@
 <template lang="html">
   <div class="container mt-5">
-    <div class="">
-      <b-alert show variant="danger">{{cartMessage}}</b-alert>
+    <div v-if="cartMessage">
+      <b-alert dismissible variant="danger" :show="cartMessage !== null" @dismissed="resetStockMessage">
+        <b>{{cartMessage.name}} :</b>  {{cartMessage.message}}
+      </b-alert>
     </div>
     <h4 class="mt-5">My cart</h4>
     <div class="mt-3">
@@ -20,15 +22,22 @@
         </template>
         <template slot="quantity" slot-scope="data">
           <b-button size="sm" variant="outline-secondary"
-            @click="increaseCartQty(data.item.id)"> +
+            @click="addToCart(data.item.id, data.item.name, data.item.price, data.item.inventory)"> +
           </b-button>
           <span class="pl-4 pr-4">{{data.item.quantity}}</span>
           <b-button size="sm" variant="outline-secondary"
-            @click="removeFromCart(data.item.id, data.item.name, data.item.price, data.item.inventory)"> -
+            @click="decreaseCartQty(data.item.id, data.item.quantity, data.item.total)"> -
           </b-button>
         </template>
         <template slot="total" slot-scope="data">
           {{data.item.total | currency}}
+        </template>
+        <template slot="remove" slot-scope="data">
+          <div class="text-right">
+            <b-button size="sm" variant="link" class="is-small"
+              @click="removeFromCart(data.item.id, data.item.total, data.item.quantity)"> x Remove
+            </b-button>
+          </div>
         </template>
       </b-table>
     </div>
@@ -54,7 +63,8 @@ export default {
         { key: 'product', label: 'PRODUCTS' },
         { key: 'price', label: 'PRICE' },
         { key: 'quantity', label: 'QTY' },
-        { key: 'total', label: 'TOTAL' }
+        { key: 'total', label: 'TOTAL' },
+        { key: 'remove', label: '' }
       ]
     }
   },
@@ -71,18 +81,36 @@ export default {
   },
   methods: {
     // TODO create methods for quantity buttons
-    increaseCartQty (id) {
-      this.$store.dispatch('increaseCartQty', id)
-      console.log(id)
-    },
-    removeFromCart (id, name, price, inventory) {
+    // increaseCartQty (id) {
+    //   this.$store.dispatch('increaseCartQty', id)
+    // },
+    addToCart (id, name, price, inventory) {
       const product = {
         id: id,
         name: name,
         price: price,
         inventory: inventory
       }
-      console.log(product)
+      this.$store.dispatch('addToCart', product)
+    },
+    removeFromCart (id, total, quantity) {
+      const product = {
+        id: id,
+        total: total,
+        quantity: quantity
+      }
+      this.$store.dispatch('removeFromCart', product)
+    },
+    resetStockMessage () {
+      this.$store.dispatch('resetStockMessage')
+    },
+    decreaseCartQty (id, quantity, total) {
+      const product = {
+        id: id,
+        total: total,
+        quantity: quantity
+      }
+      this.$store.dispatch('decreaseCartQty', product)
     }
   }
 }
