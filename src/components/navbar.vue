@@ -1,38 +1,49 @@
 <template lang="html">
-  <div class="pr-3 pl-3 border-bottom">
-    <b-navbar variant="white" type="light" toggleable="md">
-      <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
-      <b-link class="navbar-brand" :to="'/'">Online Store</b-link>
-      <b-collapse is-nav id="nav_collapse">
-      <b-navbar-nav class="ml-auto" >
-        <b-nav-item variant="link" :to="'/login'" v-if="!user">
-          Login / Signup
-        </b-nav-item>
-        <b-nav-item-dropdown right v-if="user">
-          <template slot="button-content">
-            <i class="fas fa-user"></i><span class="sr-only">User</span>
-          </template>
-          <b-dropdown-item href="#">Profile</b-dropdown-item>
-          <b-dropdown-item href="#">Orders</b-dropdown-item>
-          <b-dropdown-item @click="logout()">Logout</b-dropdown-item>
-        </b-nav-item-dropdown>
-        <b-nav-item-dropdown right no-caret>
-          <template slot="button-content">
-            <i class="fas fa-shopping-cart"></i>
-            <b-badge pill variant="primary" v-if="this.totalCartItems > 0">
-              {{totalCartItems}}
-            </b-badge>
-          </template>
-          <b-dropdown-item v-for="cartItem in cartItems" :key="cartItem.id" class="p-3 border-bottom">
-            {{cartItem.quantity}}x <b class="ml-2">{{cartItem.name}}</b>
-          </b-dropdown-item>
-          <b-dropdown-item class="text-right mt-2">
-            <b-button variant="primary" @click="gotoCart()">Go to cart</b-button>
-          </b-dropdown-item>
-        </b-nav-item-dropdown>
-      </b-navbar-nav>
-    </b-collapse>
-    </b-navbar>
+  <div class="">
+    <v-toolbar dark color="grey darken-4">
+      <router-link to="/">
+          <v-toolbar-title class="white--text ml-3">
+          Online Shop
+        </v-toolbar-title>
+      </router-link>
+      <v-spacer></v-spacer>
+
+      <router-link :to="'/login'">
+        <v-btn flat v-if="!user">Login / Signup</v-btn>
+      </router-link>
+      <div v-if="user" class="mr-2">
+        <v-menu offset-y>
+          <v-btn slot="activator" icon>
+            <v-icon>person</v-icon>
+          </v-btn>
+          <v-list>
+            <v-list-tile @click="toProfile()">
+              <v-list-tile-title>
+                My profile
+              </v-list-tile-title>
+            </v-list-tile>
+            <v-list-tile @click="toOrders()">
+              <v-list-tile-title>
+                My Orders
+              </v-list-tile-title>
+            </v-list-tile>
+            <v-list-tile @click="logout()">
+              <v-list-tile-title >
+                Logout
+              </v-list-tile-title>
+            </v-list-tile>
+          </v-list>
+        </v-menu>
+      </div>
+
+      <v-btn icon class="mr-5" to="/cart">
+        <v-badge color="blue">
+        <span slot="badge" v-if="this.totalCartItems > 0">{{totalCartItems}}</span>
+        <v-icon>shopping_cart</v-icon>
+      </v-badge>
+      </v-btn>
+
+    </v-toolbar>
   </div>
 </template>
 
@@ -46,9 +57,14 @@ export default {
     cartItems: state => state.cart.cartItems
   }),
   methods: {
+    toProfile () {
+      this.$router.push('/')
+    },
+    toOrders () {
+      this.$router.push('/')
+    },
     logout () {
-      confirm('Are you sure you want to logout?')
-      this.$store.dispatch('logout')
+      if (confirm('Are you sure you want to logout?')) this.$store.dispatch('logout') ; return false
     },
     gotoCart () {
       this.$router.push('cart')

@@ -21,7 +21,6 @@ const getters = {
 }
 const actions = {
   addToCart ({ commit, state }, product) {
-    // commit('decreaseStock', { id: product.id }, { root: true })
     if (product.inventory > 0) {
       const cartItem = state.cartItems.find(item => item.id === product.id)
       if (!cartItem) {
@@ -56,7 +55,6 @@ const actions = {
     }
   },
   applyDiscount ({ commit }, coupon) {
-    // TODO avoid adding more than 1 coupons
     db.collection('coupons').where('name', '==', coupon).get()
       .then((querySnapshot) => {
         if (querySnapshot.docs.length > 0) {

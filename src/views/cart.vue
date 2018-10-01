@@ -52,14 +52,21 @@
           <div class="subtotal-price mt-2">
             Have a promo code?
           </div>
-          <b-form inline class="mt-2">
+          <b-form inline class="mt-2" @submit.prevent="applyDiscount()">
             <label class="sr-only" for="inlineFormInputName2">Name</label>
             <b-input id="inlineFormInputName2" placeholder="Enter your code here" class="ml-3" v-model="coupon"/>
-            <b-button variant="outline-primary" class="ml-2" @click="applyDiscount()">Apply</b-button>
+            <b-button variant="outline-primary"
+              class="ml-2"
+              type="submit"
+              :disabled="discount > 0">Apply
+            </b-button>
           </b-form>
           <b-alert dismissible variant="warning" :show="discountMessage !== null" @dismissed="resetDiscountMessage" class="discount-message mt-2">
             <em>{{discountMessage}}</em>
           </b-alert>
+          <div v-if="discount > 0">
+            <span class="mt-3 ml-3 is-small"><em>A coupon has already been applied</em></span>
+          </div>
         </b-col>
         <b-col md="3" class="text-right">
           <div class="mt-3">
@@ -67,11 +74,11 @@
           </div>
           <div class="mt-3">
             <div class="">
-              <span class="total-label is-small">SHIPPING :</span><span class="subtotal-price">&euro;{{shipping}}</span>
+              <span class="total-label is-small">EST. SHIPPING :</span><span class="subtotal-price">&euro;{{shipping}}</span>
             </div>
           </div>
           <div class="mt-3">
-            <div class="">
+            <div v-if="discount > 0">
               <span class="total-label is-small">DISCOUNT {{discount}}% :</span><span class="subtotal-price">- {{discountSum | currency}}</span>
             </div>
           </div>
@@ -82,6 +89,12 @@
             <span class="total-label is-small">TOTAL :</span><span class="total-price">{{finalPrice | currency}}</span>
           </div>
         </b-col>
+    </b-row>
+    <b-row class="text-right mt-5">
+      <b-col col-12>
+        <router-link :to="'/'" class="btn btn-link">Continue shopping</router-link>
+        <router-link :to="'/checkout'" class="btn btn-primary">CHECKOUT</router-link>
+      </b-col>
     </b-row>
     </div>
     <div v-else>
@@ -161,8 +174,12 @@ export default {
       this.$store.dispatch('decreaseCartQty', product)
     },
     applyDiscount () {
-      const coupon = this.coupon
-      this.$store.dispatch('applyDiscount', coupon)
+      if (this.discount === 0) {
+        const coupon = this.coupon
+        this.$store.dispatch('applyDiscount', coupon)
+      } else {
+        console.log('discound already applied')
+      }
     },
     resetDiscountMessage () {
       this.$store.dispatch('resetDiscountMessage')
