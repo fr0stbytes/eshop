@@ -1,101 +1,85 @@
 <template lang="html">
   <div class="container mt-5">
-    <h4 class="mt-5">My cart</h4>
-    <div class="mt-3">
-      <svg height="100" width="500">
-        <line x1="0" y1="0" x2="200" y2="0" style="stroke:rgb(0, 0, 0, .7);stroke-width:6" />
-      </svg>
-    </div>
+
     <div v-if="cartTotalItems.length >= 1">
-      <div v-if="cartMessage" class="mt-5">
-        <b-alert dismissible variant="danger" :show="cartMessage !== null" @dismissed="resetStockMessage">
-          <b>{{cartMessage.name}} :</b>  {{cartMessage.message}}
-        </b-alert>
-      </div>
-      <div class="cart-table">
-        <b-table :fields="fields" :items="cartTotalItems" responsive>
-          <template slot="product" slot-scope="data">
-            <span class="mt-1 cart-title">{{data.item.name}}</span><br>
-            <span class="is-small">{{data.item.id}}</span>
-          </template>
-          <template slot="price" slot-scope="data">
-            &euro; {{data.item.price}}
-          </template>
-          <template slot="quantity" slot-scope="data">
-            <b-button size="sm" variant="outline-secondary"
-              @click="addToCart(data.item.id, data.item.name, data.item.price, data.item.inventory)"> +
-            </b-button>
-            <span class="pl-4 pr-4">{{data.item.quantity}}</span>
-            <b-button size="sm" variant="outline-secondary"
-              @click="decreaseCartQty(data.item.id, data.item.quantity, data.item.total, data.item.price)"> -
-            </b-button>
-          </template>
-          <template slot="total" slot-scope="data">
-            {{data.item.total | currency}}
-          </template>
-          <template slot="remove" slot-scope="data">
-            <div class="text-right">
-              <b-button size="sm" variant="link" class="is-small"
-                @click="removeFromCart(data.item.id, data.item.total, data.item.quantity, data.item.price)"> x Remove
-              </b-button>
+      <b-row class="mt-5">
+        <b-col md="8">
+          <div class="m-3 p-3 white-bg border">
+            <b-row class="m-2 pb-3">
+              <h5>MY CART</h5>
+            </b-row>
+            <div class="cart-table border-bottom">
+              <b-table :fields="fields" :items="cartTotalItems" responsive hover>
+                <template slot="product" slot-scope="data">
+                  <span class="mt-1 cart-title">{{data.item.name}}</span><br>
+                  <span class="is-small">{{data.item.id}}</span>
+                </template>
+                <template slot="price" slot-scope="data">
+                  &euro; {{data.item.price}}
+                </template>
+                <template slot="quantity" slot-scope="data">
+                  <b-button size="sm" variant="outline-secondary"
+                    @click="addToCart(data.item.id, data.item.name, data.item.price, data.item.inventory)"> +
+                  </b-button>
+                  <span class="pl-4 pr-4">{{data.item.quantity}}</span>
+                  <b-button size="sm" variant="outline-secondary"
+                    @click="decreaseCartQty(data.item.id, data.item.quantity, data.item.total, data.item.price)"> -
+                  </b-button>
+                </template>
+                <template slot="total" slot-scope="data">
+                  {{data.item.total | currency}}
+                </template>
+                <template slot="remove" slot-scope="data">
+                  <div class="text-right">
+                    <b-button size="sm" variant="link" class="is-small"
+                      @click="removeFromCart(data.item.id, data.item.total, data.item.quantity, data.item.price)"> x
+                    </b-button>
+                  </div>
+                </template>
+              </b-table>
             </div>
-          </template>
-        </b-table>
-      </div>
-      <div class="mt-2 text-right">
-        <svg height="8" width="200">
-          <line x1="0" y1="0" x2="200" y2="0" style="stroke:rgb(0, 0, 0, .7);stroke-width:6" />
-        </svg>
-      </div>
-      <b-row class="">
-        <b-col md="9">
-          <div class="subtotal-price mt-2">
-            Have a promo code?
-          </div>
-          <b-form inline class="mt-2" @submit.prevent="applyDiscount()">
-            <label class="sr-only" for="inlineFormInputName2">Name</label>
-            <b-input id="inlineFormInputName2" placeholder="Enter your code here" class="ml-3" v-model="coupon"/>
-            <b-button variant="outline-primary"
-              class="ml-2"
-              type="submit"
-              :disabled="discount > 0">Apply
-            </b-button>
-          </b-form>
-          <b-alert dismissible variant="warning" :show="discountMessage !== null" @dismissed="resetDiscountMessage" class="discount-message mt-2">
-            <em>{{discountMessage}}</em>
-          </b-alert>
-          <div v-if="discount > 0">
-            <span class="mt-3 ml-3 is-small"><em>A coupon has already been applied</em></span>
+            <div v-if="cartMessage">
+              <b-alert dismissible variant="warning" :show="cartMessage !== null" @dismissed="resetStockMessage">
+                <b>{{cartMessage.name}} :</b>  {{cartMessage.message}}
+              </b-alert>
+            </div>
+            <div class="mt-3 text-right">
+              <span class="total-label is-small">SUBTOTAL :</span><span class="subtotal-price">{{cartTotalPrice | currency}}</span>
+            </div>
           </div>
         </b-col>
-        <b-col md="3" class="text-right">
-          <div class="mt-3">
-            <span class="total-label is-small">SUBTOTAL :</span><span class="subtotal-price">{{cartTotalPrice | currency}}</span>
-          </div>
-          <div class="mt-3">
-            <div class="">
-              <span class="total-label is-small">EST. SHIPPING :</span><span class="subtotal-price">&euro;{{shipping}}</span>
-            </div>
-          </div>
-          <div class="mt-3">
-            <div v-if="discount > 0">
-              <span class="total-label is-small">DISCOUNT {{discount}}% :</span><span class="subtotal-price">- {{discountSum | currency}}</span>
-            </div>
-          </div>
-          <div class="mt-3">
-            <svg height="8" width="200">
-              <line x1="0" y1="0" x2="200" y2="0" style="stroke:rgb(0, 0, 0, .7);stroke-width:3" />
-            </svg> <br>
-            <span class="total-label is-small">TOTAL :</span><span class="total-price">{{finalPrice | currency}}</span>
+        <b-col md="4">
+          <div class="m-3 p-3 white-bg border">
+            <b-row class="m-2 pb-3 border-bottom">
+              <h5>TOTAL</h5>
+            </b-row>
+            <b-col class="text-right">
+              <div class="mt-3">
+                <span class="total-label is-small">SUBTOTAL :</span><span class="subtotal-price">{{cartTotalPrice | currency}}</span>
+              </div>
+              <div class="mt-3">
+                <div class="">
+                  <span class="total-label is-small">EST. SHIPPING :</span><span class="subtotal-price">&euro;{{shipping}}</span>
+                </div>
+              </div>
+              <div class="mt-3">
+                <svg height="8" width="200">
+                  <line x1="0" y1="0" x2="200" y2="0" style="stroke:rgb(0, 0, 0, .7);stroke-width:3" />
+                </svg> <br>
+                <span class="total-label is-small">TOTAL :</span><span class="total-price">{{finalPrice | currency}}</span>
+              </div>
+            </b-col>
+            <b-row class="m-2 pt-3">
+              <b-button block variant="primary" size="lg" to="/checkout">CHECKOUT</b-button>
+              <p class="mt-3"><b>WE ACCEPT:</b> </p>
+              <div class="">
+                <img src="../assets/credit-cards.png" alt="">
+              </div>
+              <p class="is-small mt-3">Got a discount code? Add it in the next step.</p>
+            </b-row>
           </div>
         </b-col>
-    </b-row>
-    <b-row class="text-right mt-5">
-      <b-col col-12>
-        <router-link :to="'/'" class="btn btn-link">Continue shopping</router-link>
-        <router-link :to="'/checkout'" class="btn btn-primary">CHECKOUT</router-link>
-      </b-col>
-    </b-row>
+      </b-row>
     </div>
     <div v-else>
       <EmptyCart />
@@ -130,19 +114,12 @@ export default {
       cartTotalItems: state => state.cart.cartItems,
       cartMessage: state => state.cart.cartMessage,
       shipping: state => state.cart.shipping,
-      discountMessage: state => state.cart.discountMessage,
-      discount: state => state.cart.discount
     }),
     ...mapGetters({
-      finalPrice: 'finalPrice',
-      discountSum: 'discountSum'
+      finalPrice: 'finalPrice'
     })
   },
   methods: {
-    // TODO create methods for quantity buttons
-    // increaseCartQty (id) {
-    //   this.$store.dispatch('increaseCartQty', id)
-    // },
     addToCart (id, name, price, inventory) {
       const product = {
         id: id,
@@ -172,23 +149,15 @@ export default {
         price: price
       }
       this.$store.dispatch('decreaseCartQty', product)
-    },
-    applyDiscount () {
-      if (this.discount === 0) {
-        const coupon = this.coupon
-        this.$store.dispatch('applyDiscount', coupon)
-      } else {
-        console.log('discound already applied')
-      }
-    },
-    resetDiscountMessage () {
-      this.$store.dispatch('resetDiscountMessage')
     }
   }
 }
 </script>
 
 <style lang="css">
+  .white-bg {
+    background-color: white;
+  }
   .is-small {
     font-size: .8em;
     color: rgba(0, 0, 0, 0.5);

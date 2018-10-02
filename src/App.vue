@@ -1,9 +1,7 @@
 <template>
   <div id="app">
-    <v-app>
-      <Navbar />
-      <router-view/>
-    </v-app>
+    <Navbar />
+    <router-view/>
   </div>
 </template>
 
@@ -14,20 +12,23 @@ export default {
   components: {
     Navbar
   },
-  // created () {
-  //     const authUser = Object.keys(window.Storage).filter((item) => item.startsWith('firebase:authUser'))
-  //     if (authUser) {
-  //       console.log(authUser.length)
-  //     } else {
-  //       console.log('no storage')
-  //     }
-  // },
   mounted () {
     this.$store.dispatch('getAllProducts')
     this.$store.dispatch('isAuthenticated')
+    this.$store.dispatch('getShippings')
   }
 }
 </script>
 
-<style lang="scss">
+<style lang="css">
+  .btn {
+    border-radius: 0 !important;
+  }
+  body {
+    background-color: #eeeeee;
+  }
+  img {
+    width: 100%;
+    height: auto;
+  }
 </style>

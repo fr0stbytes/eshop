@@ -23,15 +23,11 @@
     <div class="mt-5">
       <b-button variant="outline-dark" size="lg" @click="gotoCart()">View Shopping Cart</b-button>
     </div>
-    <div class="footer align-bottom">
-      A Vue.js experiment by Fr0stbytes
-    </div>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
-
 export default {
   name: 'products',
   computed: {
@@ -72,7 +68,6 @@ export default {
     }
   }
 }
-
 </script>
 <style lang="scss" scoped>
   .product-container {

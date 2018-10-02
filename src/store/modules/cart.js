@@ -33,7 +33,7 @@ const actions = {
           commit('increaseTotalCartItems')
           commit('shipping')
         } else {
-          commit('noStockMessage', { productName: product.name })
+          commit('noStockMessage', { productName: product.name, productInventory: product.inventory })
         }
       }
     } else {
@@ -90,6 +90,7 @@ const mutations = {
   incrementQuantity (state, { id, price }) {
     const cartItem = state.cartItems.find(item => item.id === id)
     cartItem.quantity++
+    cartItem.total = cartItem.total + price
     state.cartTotalPrice = state.cartTotalPrice + price
   },
   increaseTotalCartItems (state) {
@@ -124,10 +125,10 @@ const mutations = {
   resetDiscountMessage (state) {
     state.discountMessage = null
   },
-  noStockMessage (state, { productName }) {
+  noStockMessage (state, { productName, productInventory }) {
     console.log(productName)
     state.cartMessage = {
-      message: 'There are no more products left in stock',
+      message: 'Sorry, there are only ' + productInventory + ' ' + productName + ' available in stock.',
       name: productName
     }
   },

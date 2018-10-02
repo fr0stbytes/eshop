@@ -1,11 +1,15 @@
 import db from '../../firebase/firebaseInit'
 
 const state = {
-  all: []
+  all: [],
+  shippings: []
 }
 
 // getters
 const getters = {
+  allShippings (state) {
+    return state.shippings.sort((a,b) => (a.value > b.value) ? 1 : ((b.value > a.value) ? -1 : 0))
+  }
 }
 
 // actions
@@ -14,6 +18,12 @@ const actions = {
     db.collection('products').get().then(
       querySnapshot => {
         commit('setProducts', querySnapshot)
+      })
+  },
+  getShippings ({ commit }) {
+    db.collection('shippings').get().then(
+      querySnapshot => {
+        commit('setShippings', querySnapshot)
       })
   }
   // increaseCartQty ({ commit, state }, id) {
@@ -39,6 +49,15 @@ const mutations = {
         'price': doc.data().price
       }
       state.all.push(data)
+    })
+  },
+  setShippings (state, querySnapshot) {
+    querySnapshot.forEach(doc => {
+      const data = {
+        'name': doc.data().name,
+        'value': doc.data().value
+      }
+      state.shippings.push(data)
     })
   },
   increaseStock (state, { id }) {
