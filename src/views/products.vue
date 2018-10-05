@@ -1,9 +1,9 @@
 <template>
   <div class="product-container mt-5 mb-5">
-    <h3>Select your favourite movie</h3>
+    <h3>Featured Products</h3>
     <div class="product-list container">
       <b-row class="mt-5">
-        <b-col lg="3" v-for="product in products" :key="product.id" class="mb-1">
+        <b-col lg="4" v-for="product in products" :key="product.id" class="mb-1">
           <b-card :title="product.name"
               :sub-title="product.price + ' &euro;'">
             <p class="card-text">

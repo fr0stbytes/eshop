@@ -1,5 +1,5 @@
 <template>
-  <div class="login-container">
+  <div class="login-container m-3 p-5 white-bg border">
     <h5 class="mt-2">Welcome back</h5>
     <h6 class="text-secondary">Please login to your account</h6>
     <b-alert variant="danger"
@@ -152,8 +152,6 @@ export default {
 
 <style lang="css">
   .login-container {
-    max-width: 500px;
-
   }
   .register-btn {
     color: #6c757d;

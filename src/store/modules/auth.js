@@ -17,12 +17,15 @@ const actions = {
   isAuthenticated ({ commit }) {
     firebase.auth().onAuthStateChanged(function (user) {
       if (user) {
-        const authUser = {
-          email: user.email,
-          id: user.uid
-        }
-        commit('setUser', authUser)
-        commit('isAuthenticated')
+        db.collection('users').where('email', '==', user.email).onSnapshot(
+          (querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+              const authUser = doc.data()
+              commit('setUser', authUser)
+              commit('isAuthenticated')
+            })
+          }
+        )
       } else {
       }
     })

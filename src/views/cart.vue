@@ -1,6 +1,10 @@
 <template lang="html">
   <div class="container mt-5">
-
+    <b-row class="text-center m-3">
+      <b-col>
+        <h2>MY CART</h2>
+      </b-col>
+    </b-row>
     <div v-if="cartTotalItems.length >= 1">
       <b-row class="mt-5">
         <b-col md="8">
@@ -102,7 +106,8 @@ export default {
         { key: 'total', label: 'TOTAL' },
         { key: 'remove', label: '' }
       ],
-      coupon: ''
+      coupon: '',
+      selected: null
     }
   },
   components: {
@@ -113,7 +118,7 @@ export default {
       cartTotalPrice: state => state.cart.cartTotalPrice,
       cartTotalItems: state => state.cart.cartItems,
       cartMessage: state => state.cart.cartMessage,
-      shipping: state => state.cart.shipping,
+      shipping: state => state.cart.shipping
     }),
     ...mapGetters({
       finalPrice: 'finalPrice'
@@ -155,33 +160,5 @@ export default {
 </script>
 
 <style lang="css">
-  .white-bg {
-    background-color: white;
-  }
-  .is-small {
-    font-size: .8em;
-    color: rgba(0, 0, 0, 0.5);
-  }
-  .cart-title {
-    color: rgba(0, 0, 0, 0.8);
-    font-weight: bold;
-  }
-  .total-price {
-    font-size: 1.5em;
-    font-weight: bold;
-    margin-left: 1em;
-    color: rgba(0, 0, 0, 0.8);
-  }
-  .subtotal-price {
-    color: rgba(0, 0, 0, 0.5);
-    margin-left: 1em;
-    font-size: 1.125em;
-    font-weight: bold;
-  }
-  .total-label {
-    font-weight: bold;
-  }
-  .discount-message {
-    max-width: 400px;
-  }
+
 </style>
