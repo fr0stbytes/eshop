@@ -29,38 +29,31 @@
       </div>
 
       <b-row class=" m-2">
-        <div class="subtotal-price mt-4">
-          PAYMENT METHOD
-        </div>
+        <b-col xs="12" md="10">
+          <div class="subtotal-price mt-4">
+            PAYMENT METHOD
+          </div>
+          <div class="is-small ml-3 mb-4">
+            <em>You will be redierced to the secure payment gateway once you place your order.</em>
+          </div>
+        </b-col>
       </b-row>
-      <b-row class="m-2 pb-3">
-        <b-form-group>
-          <b-form-radio-group id="radios2" v-model="selectedPayment" name="radioSubComponent" stacked>
-              <b-form-radio value="card">
-                <div class="mb-2 p-2 pr-4 pl-4 ml-3 border payment-button">
-                  <img class="payment-img" src="../assets/credit-card.svg" alt=""><span class="ml-4">CREDIT / DEBIT CARD</span>
-                </div>
-              </b-form-radio>
+      <b-row class="m-2 pb-3 ml-4">
+        <b-col xs="12" md="10" lg="8">
+          <b-button variant="outline-secondary" :pressed="setPressed('card')" block class="text-left" @click="setPayment('card', $event)" id="paymentButton1">
+            <img class="payment-img" src="../assets/credit-card.svg" :class="getClass('card')"><span class="ml-4">CREDIT/DEBIT CARD</span>
+          </b-button>
+          <b-button variant="outline-secondary" :pressed="setPressed('paypal')" block class="text-left" @click="setPayment('paypal', $event)" id="paymentButton2">
+            <img class="payment-img" src="../assets/paypal.svg" :class="getClass('paypal')"><span class="ml-4">PAYPAL</span>
+          </b-button>
+          <b-button variant="outline-secondary" :pressed="setPressed('stripe')" block class="text-left" @click="setPayment('stripe', $event)" id="paymentButton3">
+            <img class="payment-img" src="../assets/stripe.svg" :class="getClass('stripe')"><span class="ml-4">STRIPE</span>
+          </b-button>
+          <b-button variant="outline-secondary" :pressed="setPressed('cash')" block class="text-left" @click="setPayment('cash', $event)" id="paymentButton4">
+            <img class="payment-img" src="../assets/cash.svg" :class="getClass('cash')"><span class="ml-4">CASH ON DELIVERY</span>
+          </b-button>
 
-              <b-form-radio value="paypal">
-                <div class="mb-2 p-2 pr-4 pl-4 ml-3 border payment-button">
-                  <img class="payment-img" src="../assets/paypal.svg" alt=""><span class="ml-4">PAYPAL</span>
-                </div>
-              </b-form-radio>
-
-              <b-form-radio value="stripe">
-                <div class="mb-2 p-2 pr-4 pl-4 ml-3 border payment-button">
-                  <img class="payment-img" src="../assets/stripe.svg" alt=""><span class="ml-4">STRIPE</span>
-                </div>
-              </b-form-radio>
-
-              <b-form-radio value="cash">
-                <div class="mb-2 p-2 pr-4 pl-4 ml-3 border payment-button">
-                  <img class="payment-img" src="../assets/cash.svg" alt=""><span class="ml-4">CASH ON DELIVERY</span>
-                </div>
-              </b-form-radio>
-          </b-form-radio-group>
-        </b-form-group>
+        </b-col>
       </b-row>
     </div>
     <b-modal id="modal2" title="Change Billing Address" hide-footer v-model="modalShow2">
@@ -87,13 +80,33 @@ export default {
   },
   computed: {
     ...mapState({
-      user: state => state.auth.user,
-      billing_address: state => state.orders.billingAddress
+      user: state => state.auth.user
     })
   },
   methods: {
     hideModal (value) {
       this.modalShow2 = value
+    },
+    setPayment (value, event) {
+      // console.log(value, event.target.id)
+      this.selectedPayment = value
+      this.$store.dispatch('setSelectedPayment', value)
+      this.setPressed(value)
+      this.getClass(value)
+    },
+    setPressed (value) {
+      if (value === this.selectedPayment) {
+        return true
+      } else {
+        return false
+      }
+    },
+    getClass (value) {
+      if (value === this.selectedPayment) {
+        return 'inverted-svg'
+      } else {
+        return ''
+      }
     }
   }
 }
@@ -103,15 +116,10 @@ export default {
   .payment-img {
     width: 50px;
     height: auto;
+    opacity: .3;
   }
-  .payment-button {
-    width: 100%;
-    display: block;
-  }
-  .custom-radio .custom-control-label::before{
-    margin-top: 1.5em;
-  }
-  .custom-control-label {
-    width: 100%;
+  .inverted-svg {
+    filter: invert(1);
+    opacity: .8;
   }
 </style>

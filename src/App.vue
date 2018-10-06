@@ -27,6 +27,9 @@ export default {
   .btn.btn-link {
     color: #343a40;
   }
+  .btn.btn-link:hover, .btn.btn-link:active {
+    text-decoration: none;
+  }
   .form-control {
     border-radius: 0 !important;
   }
