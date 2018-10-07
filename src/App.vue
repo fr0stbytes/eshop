@@ -15,7 +15,7 @@ export default {
   mounted () {
     this.$store.dispatch('getAllProducts')
     this.$store.dispatch('isAuthenticated')
-    this.$store.dispatch('getShippings')
+    this.$store.dispatch('setShippings')
   }
 }
 </script>

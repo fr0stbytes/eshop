@@ -5,7 +5,7 @@
         <b-col md="10">
           <h5 class="mt-2">COUPON / PROMO CODE</h5>
         </b-col>
-        <b-col md="2"class="text-right">
+        <b-col md="2" class="text-right">
           <b-btn @click="showPromo = !showPromo"
              :class="showPromo ? 'collapsed' : null"
              aria-controls="collapse1"
@@ -30,9 +30,6 @@
                 :disabled="discount > 0">APPLY CODE
               </b-button>
             </b-form>
-            <b-alert dismissible variant="warning" :show="discountMessage !== null" @dismissed="resetDiscountMessage" class="discount-message mt-2">
-              <em>{{discountMessage}}</em>
-            </b-alert>
             <div v-if="discount > 0">
               <span class="mt-3 ml-3 is-small"><em>A coupon has already been applied</em></span>
             </div>

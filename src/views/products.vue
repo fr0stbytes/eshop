@@ -5,13 +5,26 @@
       <b-row class="mt-5">
         <b-col lg="4" v-for="product in products" :key="product.id" class="mb-1">
           <b-card :title="product.name"
-              :sub-title="product.price + ' &euro;'">
-            <p class="card-text">
+              footer-bg-variant="white">
+              <div v-if="!noStock(product.id, product.inventory)" class="text-muted">{{product.inventory}} in stock</div>
+              <div v-if="noStock(product.id, product.inventory)"><b-badge pill variant="danger">Out of stock</b-badge></div>
+            <p class="card-text mt-2">
               Some quick example text to build on the card title and make up the bulk of the card's content.
             </p>
-            <div slot="footer" v-if="!noStock(product.id, product.inventory)">Available: {{product.inventory}}</div>
-            <div slot="footer" v-if="noStock(product.id, product.inventory)"><b-badge pill variant="danger">Out of stock</b-badge></div>
-            <b-button @click="addToCart(product.id, product.name, product.price, product.inventory)"
+            <div slot="footer" class="product-price">
+              <div class="text-muted" v-if="!product.original_price">
+                {{product.price}} &euro;
+              </div>
+              <div class="text-muted" v-if="product.original_price">
+                <span class="price-no-discount mr-2">
+                  {{product.original_price}} &euro;
+                </span>
+                <span class="product-sale-price">
+                  {{product.price}} &euro;
+                </span>
+              </div>
+            </div>
+            <b-button @click="addToCart(product.id, product.name, product.price, product.inventory, product.original_price)"
               variant="outline-primary"
               :disabled="noStock(product.id, product.inventory)">
               Add to Cart
@@ -39,12 +52,13 @@ export default {
     })
   },
   methods: {
-    addToCart (id, name, price, inventory) {
+    addToCart (id, name, price, inventory, original_price) {
       const product = {
         id: id,
         name: name,
         price: price,
-        inventory: inventory
+        inventory: inventory,
+        original_price: original_price
       }
       this.$store.dispatch('addToCart', product)
     },
@@ -69,7 +83,7 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
   .product-container {
     text-align: center;
   }
@@ -84,5 +98,16 @@ export default {
     position: fixed;
     bottom: 0;
     width: 100%;
+  }
+  .product-price {
+    text-align: right;
+    font-weight: bold;
+  }
+  .price-no-discount {
+    color: rgba(0, 0, 0, .3);
+    text-decoration: line-through;
+  }
+  .product-sale-price {
+    color: #d01345;
   }
 </style>

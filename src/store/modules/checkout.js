@@ -2,11 +2,15 @@
 import db from '../../firebase/firebaseInit'
 
 const state = {
-  selectedPayment: ''
+  selectedPayment: '',
+  shippings: [],
+  shipping: ''
 }
 
 const getters = {
-
+  allShippings (state, rootState) {
+    return state.shippings.sort((a,b) => (a.value > b.value) ? 1 : ((b.value > a.value) ? -1 : 0))
+  }
 }
 
 const actions = {
@@ -41,12 +45,27 @@ const actions = {
   setSelectedPayment ({ commit }, value) {
     console.log(value)
     commit('setSelectedPayment', value)
+  },
+  setShippings ({ commit }) {
+    db.collection('shippings').get().then(
+      querySnapshot => {
+        commit('setShippings', querySnapshot)
+      })
   }
 }
 
 const mutations = {
   setSelectedPayment (state, value) {
     state.selectedPayment = value
+  },
+  setShippings (state, querySnapshot) {
+    querySnapshot.forEach(doc => {
+      const data = {
+        'name': doc.data().name,
+        'value': doc.data().value
+      }
+      state.shippings.push(data)
+    })
   }
 }
 

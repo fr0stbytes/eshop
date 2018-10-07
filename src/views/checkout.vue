@@ -30,6 +30,9 @@
             <div class="mt-3">
               <span class="total-label is-small">SUBTOTAL :</span><span class="subtotal-price">{{cartTotalPrice | currency}}</span>
             </div>
+            <div class="mt-3" v-if="discountSum !== 0 && discountSum !== undefined">
+              <span class="total-label is-small">{{discount}}% DISCOUNT :</span><span class="subtotal-price">{{discountSum | currency}}</span>
+            </div>
             <div class="mt-3">
               <div class="">
                 <span class="total-label is-small">DELIVERY :</span><span class="subtotal-price">&euro;{{shipping}}</span>
@@ -87,10 +90,12 @@ export default {
       cartItems: state => state.cart.totalCartItems,
       cartTotalPrice: state => state.cart.cartTotalPrice,
       cartMessage: state => state.cart.cartMessage,
-      shipping: state => state.cart.shipping
+      shipping: state => state.checkout.shipping,
+      discount: state => state.cart.discount
     }),
     ...mapGetters({
-      finalPrice: 'finalPrice'
+      finalPrice: 'finalPrice',
+      discountSum: 'discountSum'
     })
   },
   methods: {

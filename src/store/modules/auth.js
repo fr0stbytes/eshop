@@ -36,12 +36,14 @@ const actions = {
         firebase.auth().createUserWithEmailAndPassword(registerDetails.email, registerDetails.password)
           .then((data) => {
             db.collection('users').add({
-              email: data.user.email
+              email: data.user.email,
+              role: 'user'
             })
               .then((docRef) => {
                 const newUser = {
                   id: docRef.id,
-                  email: registerDetails.email
+                  email: registerDetails.email,
+                  role: 'user'
                 }
                 commit('setUserRegister', newUser)
               })
@@ -60,7 +62,8 @@ const actions = {
       .then((data) => {
         const newUser = {
           id: data.user.uid,
-          email: data.user.email
+          email: data.user.email,
+          role: data.user.role
         }
         commit('setUserLogin', newUser)
       })
@@ -99,7 +102,8 @@ const actions = {
                 email: providedEmail,
                 name: providedName,
                 photoUrl: providedPhoto,
-                uid: providedUid
+                uid: providedUid,
+                role: 'user'
               })
             }
           })

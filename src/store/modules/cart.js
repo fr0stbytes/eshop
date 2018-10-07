@@ -4,7 +4,7 @@ const state = {
   cartItems: [],
   totalCartItems: '',
   cartTotalPrice: 0,
-  shipping: 4.99,
+  estShipping: 4.99,
   discount: 0,
   discountMessage: null,
   cartMessage: null
@@ -24,7 +24,7 @@ const actions = {
     if (product.inventory > 0) {
       const cartItem = state.cartItems.find(item => item.id === product.id)
       if (!cartItem) {
-        commit('saveItems', { id: product.id, name: product.name, price: product.price, inventory: product.inventory })
+        commit('saveItems', { id: product.id, name: product.name, price: product.price, inventory: product.inventory, original_price: product.original_price })
         commit('increaseTotalCartItems')
         commit('shipping')
       } else {
@@ -76,11 +76,12 @@ const actions = {
 }
 
 const mutations = {
-  saveItems (state, { id, name, price, inventory }) {
+  saveItems (state, { id, name, price, inventory, original_price }) {
     state.cartItems.push({
       id,
       name,
       price,
+      original_price,
       quantity: 1,
       inventory,
       total: price
@@ -111,9 +112,9 @@ const mutations = {
   },
   shipping (state) {
     if (state.cartTotalPrice < 50) {
-      state.shipping = 4.99
+      state.estShipping = 4.99
     } else {
-      state.shipping = 0
+      state.estShipping = 0
     }
   },
   applyDiscount (state, discountValue) {

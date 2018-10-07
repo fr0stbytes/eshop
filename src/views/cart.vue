@@ -19,7 +19,8 @@
                   <span class="is-small">{{data.item.id}}</span>
                 </template>
                 <template slot="price" slot-scope="data">
-                  &euro; {{data.item.price}}
+                  <span class="price-no-discount" v-if="data.item.original_price">&euro; {{data.item.original_price}}  </span>
+                  <span>  &euro; {{data.item.price}}</span>
                 </template>
                 <template slot="quantity" slot-scope="data">
                   <b-button size="sm" variant="outline-secondary"
@@ -31,12 +32,13 @@
                   </b-button>
                 </template>
                 <template slot="total" slot-scope="data">
-                  {{data.item.total | currency}}
+                  <b>{{data.item.total | currency}}</b>
                 </template>
                 <template slot="remove" slot-scope="data">
                   <div class="text-right">
                     <b-button size="sm" variant="link" class="is-small"
-                      @click="removeFromCart(data.item.id, data.item.total, data.item.quantity, data.item.price)"> x
+                      @click="removeFromCart(data.item.id, data.item.total, data.item.quantity, data.item.price)">
+                      <i class="fas fa-trash-alt text-muted"></i>
                     </b-button>
                   </div>
                 </template>
@@ -118,7 +120,7 @@ export default {
       cartTotalPrice: state => state.cart.cartTotalPrice,
       cartTotalItems: state => state.cart.cartItems,
       cartMessage: state => state.cart.cartMessage,
-      shipping: state => state.cart.shipping
+      shipping: state => state.cart.estShipping
     }),
     ...mapGetters({
       finalPrice: 'finalPrice'
