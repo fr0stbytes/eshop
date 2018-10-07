@@ -1,8 +1,11 @@
 <template>
   <div class="container checkout-container pt-5">
-    <b-row class="text-center m-3">
+    <b-row class="text-center m-2">
       <b-col>
         <h2>CHECKOUT</h2>
+        <b-alert class="mt-4" show v-if="finalPrice < 50">
+          <em>You are <b>{{50 - finalPrice | currency}}</b> away from qualifying for FREE shipping!</em>
+        </b-alert>
       </b-col>
     </b-row>
     <b-row>

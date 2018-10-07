@@ -69,4 +69,10 @@ export default {
   .discount-message {
     max-width: 400px;
   }
+  .trash-icon {
+    color: rgba(0, 0, 0, 0.3);
+  }
+  .trash-icon:hover {
+    color: #d01345;
+  }
 </style>

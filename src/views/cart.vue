@@ -38,7 +38,7 @@
                   <div class="text-right">
                     <b-button size="sm" variant="link" class="is-small"
                       @click="removeFromCart(data.item.id, data.item.total, data.item.quantity, data.item.price)">
-                      <i class="fas fa-trash-alt text-muted"></i>
+                      <i class="fas fa-trash-alt trash-icon"></i>
                     </b-button>
                   </div>
                 </template>
