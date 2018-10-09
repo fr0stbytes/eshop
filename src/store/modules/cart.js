@@ -4,10 +4,11 @@ const state = {
   cartItems: [],
   totalCartItems: '',
   cartTotalPrice: 0,
-  estShipping: 4.99,
+  estShipping: 4,
   discount: 0,
   discountMessage: null,
-  cartMessage: null
+  cartMessage: null,
+  shippings: []
 }
 const getters = {
   finalPrice (state) {
@@ -17,6 +18,23 @@ const getters = {
   discountSum (state) {
     const discountSum = state.cartTotalPrice * state.discount / 100
     return discountSum
+  },
+  shippings (state) {
+    const totalPrice = state.cartTotalPrice
+    if (totalPrice < 50) {
+      const shippings = state.shippings.filter((shipping) => {
+        return shipping.value >= 4
+      })
+      return shippings.sort((a, b) => (a.value > b.value) ? 1 : ((b.value > a.value) ? -1 : 0))
+    } else {
+      const shippings = state.shippings.filter((shipping) => {
+        return shipping.value != 4
+      })
+      return shippings.sort((a, b) => (a.value > b.value) ? 1 : ((b.value > a.value) ? -1 : 0))
+    }
+  },
+  estShipping (state) {
+    return state.estShipping
   }
 }
 const actions = {
@@ -72,6 +90,12 @@ const actions = {
   },
   resetStockMessage ({ commit }) {
     commit('resetStockMessage')
+  },
+  setShippings ({ commit }) {
+    db.collection('shippings').get().then(
+      querySnapshot => {
+        commit('setShippings', querySnapshot)
+      })
   }
 }
 
@@ -112,7 +136,7 @@ const mutations = {
   },
   shipping (state) {
     if (state.cartTotalPrice < 50) {
-      state.estShipping = 4.99
+      state.estShipping = 4
     } else {
       state.estShipping = 0
     }
@@ -135,6 +159,15 @@ const mutations = {
   },
   resetStockMessage (state) {
     state.cartMessage = null
+  },
+  setShippings (state, querySnapshot) {
+    querySnapshot.forEach(doc => {
+      const data = {
+        'name': doc.data().name,
+        'value': doc.data().value
+      }
+      state.shippings.push(data)
+    })
   }
 }
 

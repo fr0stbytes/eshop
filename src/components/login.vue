@@ -1,5 +1,8 @@
 <template>
   <div class="login-container m-3 p-5 white-bg border">
+    <div class="text-center">
+      <Spinner v-if="redirecting"/>
+    </div>
     <h5 class="mt-2">Welcome back</h5>
     <h6 class="text-secondary">Please login to your account</h6>
     <b-alert variant="danger"
@@ -33,7 +36,7 @@
       <b-button type="submit" variant="primary">Login</b-button>
     </b-form>
     <div class="is-small text-secondary mt-2">
-      <b-btn variant="link" v-b-modal.modal1 class="register-btn">Don't have an account? Click here to Register</b-btn>
+      <b-btn variant="link" @click="modalRegisterShow = !modalRegisterShow" class="register-btn">Don't have an account? Click here to Register</b-btn>
     </div>
     </div>
     <div class="social-login mt-5">
@@ -41,7 +44,7 @@
       <b-button variant="primary" class="mt-2 btn-block" @click="loginWithFacebook()">Login With Facebook</b-button>
     </div>
 
-    <b-modal id="modal1" centered hide-footer title="Create an Account">
+    <b-modal id="modal1" centered hide-footer title="Create an Account" v-model="modalRegisterShow">
       <b-alert variant="danger"
                dismissible
                :show="registerError !== null"
@@ -92,16 +95,22 @@
 <script>
 import { mapState } from 'vuex'
 import firebase from 'firebase'
+import Spinner from './spinner'
 
 export default {
   name: 'login',
+  components: {
+    Spinner
+  },
   data () {
     return {
       email: '',
       password: '',
       registerPassword: '',
       registerEmail: '',
-      retypePassword: ''
+      retypePassword: '',
+      modalRegisterShow: false,
+      redirecting: false
     }
   },
   computed: {
@@ -117,7 +126,11 @@ export default {
         email: this.email,
         password: this.password
       }
+      this.redirecting = true
       this.$store.dispatch('loginWithEmail', loginDetails)
+      .then(response => {
+        this.loginRedirect()
+      })
     },
     clearLoginError () {
       this.$store.dispatch('clearLoginError')
@@ -132,7 +145,12 @@ export default {
           email: this.registerEmail,
           password: this.registerPassword
         }
+        this.redirecting = true
         this.$store.dispatch('registerWithEmail', registerDetails)
+        .then(response => {
+          this.modalRegisterShow = false
+          this.loginRedirect()
+        })
       } else {
         // Handle Password doesn't match or password < 6
         console.log(this.registerPassword + ' + ' + this.retypePassword + length.length)
@@ -140,11 +158,30 @@ export default {
     },
     loginWithGoogle () {
       const provider = new firebase.auth.GoogleAuthProvider()
-      this.$store.dispatch('socialLogin', provider)
+      this.redirecting = true
+      this.socialLogin(provider)
     },
     loginWithFacebook () {
       const provider = new firebase.auth.FacebookAuthProvider()
+      this.redirecting = true
+      this.socialLogin(provider)
+    },
+    socialLogin(provider) {
       this.$store.dispatch('socialLogin', provider)
+        .then(response => {
+          this.loginRedirect()
+        })
+    },
+    loginRedirect() {
+      if (this.$route.path === '/login') {
+        setTimeout(() => {
+          this.$router.go(-1)
+        }, 1500)
+      } else {
+      }
+      setTimeout(() => {
+        this.redirecting = false
+      }, 1600)
     }
   }
 }

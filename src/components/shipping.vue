@@ -3,17 +3,21 @@
     <div class="m-3 p-3 white-bg border">
       <b-row class="m-2 pb-3 border-bottom">
         <b-col xs="12">
-          <h5>SHIPPING</h5>
+          <h5>SHIPPING METHOD</h5>
         </b-col>
       </b-row>
       <b-row class="m-2 pb-3 border-bottom">
         <b-col xs="12">
-          <div v-for="shipping in allShippings">
-            {{shipping.name}}
-          </div>
-          <div class="">
-            <b-form-select v-model="selected" :options="filterShippings()" class="mb-3" />
-          </div>
+          <b-form-group class="pt-3">
+            <b-form-radio-group v-model="selected"
+                          :options="shippings"
+                          text-field="name"
+                          value-field="value"
+                          stacked
+                          :change="setShipping(this.selected)"
+                          :checked="this.options.value == estShipping"
+                          class="shipping-radio"/>
+          </b-form-group>
         </b-col>
       </b-row>
     </div>
@@ -26,7 +30,6 @@ import { mapState, mapGetters } from 'vuex'
 export default {
   data () {
     return {
-      filteredShippings: [],
       selected: ''
     }
   },
@@ -35,15 +38,21 @@ export default {
       cartTotalPrice: state => state.cart.cartTotalPrice
     }),
     ...mapGetters({
-      allShippings: 'allShippings'
+      shippings: 'shippings',
+      estShipping: 'estShipping'
     })
   },
   methods: {
-    filterShippings () {
+    setShipping (input) {
+      const shipping = this.shippings.find((shipping) => {
+         return shipping.value === input
+      })
+      this.$store.dispatch('setSelectedShipping', JSON.stringify(shipping))
     }
   }
 }
 </script>
 
-<style lang="css">
+<style lang="scss" scoped>
+
 </style>

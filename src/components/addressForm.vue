@@ -6,7 +6,7 @@
         <div class="mt-4 mb-1 address-form-label">
           * FIRST NAME :
         </div>
-        <b-form-input id="exampleInput1" type="text" v-model="address.first_name" required></b-form-input>
+        <b-form-input id="exampleInput1" type="text" v-model="address.first_name" required :placeholder="addressDetails.first_name || Optional">></b-form-input>
       </div>
       <div>
         <div class="mt-4 mb-1 address-form-label">
@@ -30,7 +30,7 @@
           * ADDRESS :
         </div>
         <b-form-input id="exampleInput1" type="text" v-model="address.address_line1" required></b-form-input>
-        <b-form-input class="mt-2" id="exampleInput1" type="text" v-model="address.address_line2" placeholder="Optional"></b-form-input>
+        <b-form-input class="mt-2" id="exampleInput1" type="text" v-model="address.address_line2" :placeholder="addressDetails.address_line2 || Optional"></b-form-input>
       </div>
       <div>
         <div class="mt-4 mb-1 address-form-label">
@@ -61,7 +61,7 @@
 import { mapState } from 'vuex'
 
 export default {
-  props: ['addressToChange'],
+  props: ['addressToChange', 'addressDetails'],
   data () {
     return {
       address: {

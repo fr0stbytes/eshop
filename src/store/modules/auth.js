@@ -31,46 +31,51 @@ const actions = {
     })
   },
   registerWithEmail ({ commit }, registerDetails) {
-    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-      .then(() => {
-        firebase.auth().createUserWithEmailAndPassword(registerDetails.email, registerDetails.password)
-          .then((data) => {
-            db.collection('users').add({
-              email: data.user.email,
-              role: 'user'
-            })
-              .then((docRef) => {
-                const newUser = {
-                  id: docRef.id,
-                  email: registerDetails.email,
-                  role: 'user'
-                }
-                commit('setUserRegister', newUser)
+    return new Promise((resolve, reject) => {
+      firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+        .then(() => {
+          firebase.auth().createUserWithEmailAndPassword(registerDetails.email, registerDetails.password)
+            .then((data) => {
+              db.collection('users').add({
+                email: data.user.email,
+                role: 'user'
               })
-          })
-          .catch((error) => {
-            // TODO Handle Errors here.
-            commit('registerError', error)
-          })
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+                .then((docRef) => {
+                  // const newUser = {
+                  //   id: docRef.id,
+                  //   email: registerDetails.email,
+                  //   role: 'user'
+                  // }
+                  // commit('setUserRegister', newUser)
+                })
+                resolve()
+            })
+            .catch((error) => {
+              // TODO Handle Errors here.
+              commit('registerError', error)
+            })
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    })
   },
   loginWithEmail ({ commit }, loginDetails) {
-    firebase.auth().signInWithEmailAndPassword(loginDetails.email, loginDetails.password)
-      .then((data) => {
-        const newUser = {
-          id: data.user.uid,
-          email: data.user.email,
-          role: data.user.role
-        }
-        commit('setUserLogin', newUser)
-      })
-      .catch((error) => {
-        // TODO Handle Errors here.
-        commit('loginError', error)
-      })
+    return new Promise((resolve, reject) => {
+      firebase.auth().signInWithEmailAndPassword(loginDetails.email, loginDetails.password)
+        .then((data) => {
+          // const newUser = {
+          //   id: data.user.uid,
+          //   email: data.user.email,
+          //   role: data.user.role
+          // }
+          resolve()
+        })
+        .catch((error) => {
+          // TODO Handle Errors here.
+          commit('loginError', error)
+        })
+    })
   },
   logout ({ commit }) {
     // TODO validate there is a user logged in
@@ -86,32 +91,35 @@ const actions = {
     commit('clearRegisterError')
   },
   socialLogin ({ commit }, provider) {
-    firebase.auth().signInWithPopup(provider)
-      .then((result) => {
-        const providedEmail = result.user.email
-        const providedName = result.user.displayName
-        const providedPhoto = result.user.photoURL
-        const providedUid = result.user.uid
-        db.collection('users').where('email', '==', providedEmail).get()
-          .then((querySnapshot) => {
-            if (querySnapshot.docs.length > 0) {
-              console.log('doc exists')
-            } else {
-              console.log('doc not there')
-              db.collection('users').add({
-                email: providedEmail,
-                name: providedName,
-                photoUrl: providedPhoto,
-                uid: providedUid,
-                role: 'user'
-              })
-            }
-          })
-      })
-      .catch((error) => {
-        console.log(error)
-        commit('loginError', error)
-      })
+    return new Promise((resolve, reject) => {
+      firebase.auth().signInWithPopup(provider)
+        .then((result) => {
+          const providedEmail = result.user.email
+          const providedName = result.user.displayName
+          const providedPhoto = result.user.photoURL
+          const providedUid = result.user.uid
+          db.collection('users').where('email', '==', providedEmail).get()
+            .then((querySnapshot) => {
+              if (querySnapshot.docs.length > 0) {
+                console.log('doc exists')
+              } else {
+                console.log('doc not there')
+                db.collection('users').add({
+                  email: providedEmail,
+                  name: providedName,
+                  photoUrl: providedPhoto,
+                  uid: providedUid,
+                  role: 'user'
+                })
+              }
+            })
+            resolve()
+        })
+        .catch((error) => {
+          console.log(error)
+          commit('loginError', error)
+        })
+    })
   }
 }
 
@@ -122,14 +130,18 @@ const mutations = {
   isAuthenticated (state) {
     state.isAuthenticated = true
   },
-  setUserLogin (state, newUser) {
-    state.user = newUser
-    router.go(-1)
-  },
-  setUserRegister (state, newUser) {
-    state.user = newUser
-    router.push({ name: 'profile', params: { id: newUser.id } })
-  },
+  // setUserLogin (state, newUser, router) {
+  //   state.user = newUser
+  //   if (router === '/login') {
+  //     router.go(-1)
+  //   } else {
+  //     return
+  //   }
+  // },
+  // setUserRegister (state, newUser) {
+  //   state.user = newUser
+  //   router.push({ name: 'profile', params: { id: newUser.id } })
+  // },
   clearUser (state) {
     state.user = null
     router.push('/')

@@ -102,8 +102,12 @@ export default {
   },
   methods: {
     logout () {
-      confirm('Are you sure you want to logout?')
-      this.$store.dispatch('logout')
+      const d = confirm('Are you sure you want to logout?')
+      if (d == true) {
+          this.$store.dispatch('logout')
+      } else {
+          return false
+      }
     },
     gotoCart () {
       this.$router.push('cart')

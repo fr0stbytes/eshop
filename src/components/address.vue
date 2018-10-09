@@ -39,7 +39,7 @@
     </div>
     <b-modal id="modal1" title="Change Shipping Address" hide-footer v-model="modalShow">
       <div class="p-2">
-        <AddressForm :addressToChange="'shipping'" v-on:hideModal="hideModal($event)"/>
+        <AddressForm :addressToChange="'shipping'" :addressDetails="this.user.delivery_address" v-on:hideModal="hideModal($event)"/>
       </div>
     </b-modal>
   </div>
@@ -61,6 +61,7 @@ export default {
   computed: {
     ...mapState({
       user: state => state.auth.user
+      // shipping_address: state  => state.auth.user.shipping_address
     })
   },
   methods: {

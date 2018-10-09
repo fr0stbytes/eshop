@@ -46,8 +46,8 @@
           <b-button variant="outline-secondary" :pressed="setPressed('paypal')" block class="text-left" @click="setPayment('paypal', $event)" id="paymentButton2">
             <img class="payment-img" src="../assets/paypal.svg" :class="getClass('paypal')"><span class="ml-4">PAYPAL</span>
           </b-button>
-          <b-button variant="outline-secondary" :pressed="setPressed('stripe')" block class="text-left" @click="setPayment('stripe', $event)" id="paymentButton3">
-            <img class="payment-img" src="../assets/stripe.svg" :class="getClass('stripe')"><span class="ml-4">STRIPE</span>
+          <b-button variant="outline-secondary" :pressed="setPressed('sofort')" block class="text-left" @click="setPayment('sofort', $event)" id="paymentButton3">
+            <img class="payment-img" src="../assets/sofort.svg" :class="getClass('sofort')"><span class="ml-4">SOFORT</span>
           </b-button>
           <b-button variant="outline-secondary" :pressed="setPressed('cash')" block class="text-left" @click="setPayment('cash', $event)" id="paymentButton4">
             <img class="payment-img" src="../assets/cash.svg" :class="getClass('cash')"><span class="ml-4">CASH ON DELIVERY</span>
