@@ -67,9 +67,6 @@
             />
           </circle>
         </svg>
-        <div class="spinner-text mt-3">
-          <h5>Authenticating...</h5>
-        </div>
       </div>
     </div>
   </div>

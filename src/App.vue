@@ -1,7 +1,9 @@
 <template>
   <div id="app">
     <Navbar />
-    <router-view/>
+    <transition name="page-transition" enter-active-class="animated fadeInRightBig" exit-active-class="animated fadeOutLeft">
+      <router-view/>
+    </transition>
   </div>
 </template>
 
@@ -21,6 +23,11 @@ export default {
 </script>
 
 <style lang="css">
+  #app{
+    width: 100%;
+    overflow-x: hidden;
+    overflow-y: hidden;
+  }
   .btn {
     border-radius: 0 !important;
   }

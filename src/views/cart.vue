@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="container mt-5">
+  <div class="container mt-5 page">
     <b-row class="text-center m-3">
       <b-col>
         <h2>MY CART</h2>

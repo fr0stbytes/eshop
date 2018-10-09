@@ -48,7 +48,7 @@ const actions = {
                   // }
                   // commit('setUserRegister', newUser)
                 })
-                resolve()
+              resolve()
             })
             .catch((error) => {
               // TODO Handle Errors here.
@@ -113,7 +113,7 @@ const actions = {
                 })
               }
             })
-            resolve()
+          resolve()
         })
         .catch((error) => {
           console.log(error)

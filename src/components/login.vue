@@ -1,7 +1,10 @@
 <template>
   <div class="login-container m-3 p-5 white-bg border">
-    <div class="text-center">
-      <Spinner v-if="redirecting"/>
+    <div class="text-center" v-if="redirecting">
+      <Spinner />
+      <div class="mt-3 spinner-text">
+        <h5>Authenticating...</h5>
+      </div>
     </div>
     <h5 class="mt-2">Welcome back</h5>
     <h6 class="text-secondary">Please login to your account</h6>
@@ -128,9 +131,9 @@ export default {
       }
       this.redirecting = true
       this.$store.dispatch('loginWithEmail', loginDetails)
-      .then(response => {
-        this.loginRedirect()
-      })
+        .then(response => {
+          this.loginRedirect()
+        })
     },
     clearLoginError () {
       this.$store.dispatch('clearLoginError')
@@ -147,10 +150,10 @@ export default {
         }
         this.redirecting = true
         this.$store.dispatch('registerWithEmail', registerDetails)
-        .then(response => {
-          this.modalRegisterShow = false
-          this.loginRedirect()
-        })
+          .then(response => {
+            this.modalRegisterShow = false
+            this.loginRedirect()
+          })
       } else {
         // Handle Password doesn't match or password < 6
         console.log(this.registerPassword + ' + ' + this.retypePassword + length.length)
@@ -166,13 +169,13 @@ export default {
       this.redirecting = true
       this.socialLogin(provider)
     },
-    socialLogin(provider) {
+    socialLogin (provider) {
       this.$store.dispatch('socialLogin', provider)
         .then(response => {
           this.loginRedirect()
         })
     },
-    loginRedirect() {
+    loginRedirect () {
       if (this.$route.path === '/login') {
         setTimeout(() => {
           this.$router.go(-1)

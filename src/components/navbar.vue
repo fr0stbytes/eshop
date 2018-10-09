@@ -17,7 +17,7 @@
             <b-dropdown-item href="#">Orders</b-dropdown-item>
             <b-dropdown-item @click="logout()">Logout</b-dropdown-item>
           </b-nav-item-dropdown>
-          <b-nav-item-dropdown right no-caret>
+          <b-nav-item-dropdown right no-caret >
             <template slot="button-content">
               <i class="fas fa-shopping-cart"></i>
               <b-badge pill variant="primary" v-if="this.totalCartItems > 0">
@@ -90,10 +90,10 @@ import { mapState, mapGetters } from 'vuex'
 export default {
   computed: {
     ...mapState({
-    totalCartItems: state => state.cart.totalCartItems,
-    user: state => state.auth.user,
-    cartItems: state => state.cart.cartItems,
-    cartTotalPrice: state => state.cart.cartTotalPrice
+      totalCartItems: state => state.cart.totalCartItems,
+      user: state => state.auth.user,
+      cartItems: state => state.cart.cartItems,
+      cartTotalPrice: state => state.cart.cartTotalPrice
     }),
     ...mapGetters({
       finalPrice: 'finalPrice',
@@ -103,10 +103,10 @@ export default {
   methods: {
     logout () {
       const d = confirm('Are you sure you want to logout?')
-      if (d == true) {
-          this.$store.dispatch('logout')
+      if (d === true) {
+        this.$store.dispatch('logout')
       } else {
-          return false
+        return false
       }
     },
     gotoCart () {
