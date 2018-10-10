@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <Navbar />
     <transition name="page-transition" enter-active-class="animated fadeInRightBig" exit-active-class="animated fadeOutLeft">
       <router-view/>
     </transition>
@@ -8,11 +7,10 @@
 </template>
 
 <script>
-import Navbar from './components/navbar'
+// import Navbar from './components/navbar'
 
 export default {
   components: {
-    Navbar
   },
   mounted () {
     this.$store.dispatch('getAllProducts')
@@ -22,11 +20,14 @@ export default {
 }
 </script>
 
-<style lang="css">
+<style lang="scss">
+
   #app{
     width: 100%;
     overflow-x: hidden;
     overflow-y: hidden;
+    font-family: 'Lato', sans-serif;
+
   }
   .btn {
     border-radius: 0 !important;
@@ -41,7 +42,7 @@ export default {
     border-radius: 0 !important;
   }
   body {
-    background-color: #f2f2f2 !important;
+    background-color: #f2f2f2;
   }
   img {
     width: 100%;
@@ -49,6 +50,9 @@ export default {
   }
   .white-bg {
     background-color: white;
+  }
+  .border-bottom {
+    border-bottom: 1px solid #dbdbdb;
   }
   .is-small {
     font-size: .8em;
