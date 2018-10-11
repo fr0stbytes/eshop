@@ -14,7 +14,7 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'home',
+      name: 'eshop',
       component: Home,
       children: [
         {
@@ -50,7 +50,34 @@ export default new Router({
     {
       path: '/dashboard',
       name: 'dashboard',
-      component: Dashboard
+      component: Dashboard,
+      children: [
+        {
+          path: '/',
+          name: 'home',
+          component: () => import('./components/dashboard/dashboard-home.vue')
+        },
+        {
+          path: 'home',
+          name: 'home',
+          redirect: '/dashboard'
+        },
+        {
+          path: 'orders',
+          name: 'orders',
+          component: () => import('./components/dashboard/orders.vue')
+        },
+        {
+          path: 'customers',
+          name: 'customers',
+          component: () => import('./components/dashboard/customers.vue')
+        },
+        {
+          path: 'products',
+          name: 'products',
+          component: () => import('./components/dashboard/products.vue')
+        }
+      ]
     }
   ]
 })

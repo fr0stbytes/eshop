@@ -1,9 +1,9 @@
 <template>
-  <div id="app">
+  <v-app id="app">
     <transition name="page-transition" enter-active-class="animated fadeInRightBig" exit-active-class="animated fadeOutLeft">
       <router-view/>
     </transition>
-  </div>
+  </v-app>
 </template>
 
 <script>
